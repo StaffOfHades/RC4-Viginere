@@ -35,14 +35,14 @@ if __name__ == "__main__":
 
     cypher = rc4(text, key)
     print(cypher)
-    
+
     hexs = cypher.encode()
     byt = [hex(b) for b in bytearray(hexs)]
-    k = ' '.join(map(bin, bytearray(cypher, 'utf8')))
+    k = " ".join(map(bin, bytearray(cypher, "utf8")))
 
     #print(hexs)
     #print(byt)
     #print(k)
 
     plain = rc4(cypher, key)
-    print(plain)    
+    print(plain)
