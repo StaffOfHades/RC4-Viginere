@@ -21,28 +21,34 @@ def prga(S):
         k = S[t]
         yield k
 
-def rc4(text, key):
+def rc4(text, keystream):
     out = []
-    keystream = prga(ksa(key))
-    for ch in text:
-        out.append(chr(ord(ch) ^ keystream.__next__()))
+    k = [keystream.__next__() for i in range(len(text))] 
+    #print([hex(l) for l in k])
 
-    return "".join(out)
+    out = [ord(ch) ^ k[i] for i, ch in enumerate(text)]
+    #print([hex(l) for l in out])
+
+    return "".join([chr(o) for o in out])
+
+def encrypt(text, key):
+    keystream = prga(ksa(key))
+    return rc4(text, keystream)
+
+def decrypt(text, key):
+    keystream = prga(ksa(key))
+    return rc4(text, keystream)
+
+def toHexString(hexx):
+    return "".join([hex(ord(h)) for h in hexx]).replace("0x", "")
 
 if __name__ == "__main__":
     text = "Hello World"
     key = "ABCD"
 
-    cypher = rc4(text, key)
-    print(cypher)
+    cypher = encrypt(text, key)
+    #print(cypher)
+    print(toHexString(cypher))
 
-    hexs = cypher.encode()
-    byt = [hex(b) for b in bytearray(hexs)]
-    k = " ".join(map(bin, bytearray(cypher, "utf8")))
-
-    #print(hexs)
-    #print(byt)
-    #print(k)
-
-    plain = rc4(cypher, key)
+    plain = decrypt(cypher, key)
     print(plain)
